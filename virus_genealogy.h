@@ -42,16 +42,16 @@ public:
         typename std::set<std::shared_ptr<Virus>>::iterator it;
 
     public:
-        VirusGenealogy(VirusGenealogy& other) = delete;
-
-        VirusGenealogy& operator=(VirusGenealogy& other) = delete;
+        using difference_type = std::ptrdiff_t;
+        using value_type = Virus;
+        using iterator_category = std::bidirectional_iterator_tag;
 
         explicit children_iterator() = default;
 
         explicit children_iterator(typename std::set<std::shared_ptr<Virus>>::iterator it)
                 : it(it) {}
 
-        children_iterator operator++() {
+        children_iterator& operator++() {
             ++it;
             return *this;
         }
@@ -62,7 +62,7 @@ public:
             return buf;
         }
 
-        children_iterator operator--() {
+        children_iterator& operator--() {
             --it;
             return *this;
         }
@@ -73,7 +73,7 @@ public:
             return buf;
         }
 
-        Virus &operator*() const {
+        const Virus &operator*() const {
             return **it;
         }
 
@@ -95,6 +95,10 @@ public:
     explicit VirusGenealogy(typename Virus::id_type const &stem_id) :
     nodes{{stem_id, std::make_shared<VirusNode>(stem_id)}},
     stem_id(stem_id) {}
+
+    VirusGenealogy(VirusGenealogy& other) = delete;
+
+    VirusGenealogy& operator=(VirusGenealogy& other) = delete;
 
     // Zwraca identyfikator wirusa macierzystego.
     typename Virus::id_type get_stem_id() const {return stem_id;}
