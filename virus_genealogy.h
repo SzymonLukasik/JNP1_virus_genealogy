@@ -42,6 +42,10 @@ public:
         typename std::set<std::shared_ptr<Virus>>::iterator it;
 
     public:
+        VirusGenealogy(VirusGenealogy& other) = delete;
+
+        VirusGenealogy& operator=(VirusGenealogy& other) = delete;
+
         explicit children_iterator() = default;
 
         explicit children_iterator(typename std::set<std::shared_ptr<Virus>>::iterator it)
