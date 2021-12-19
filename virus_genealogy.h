@@ -177,20 +177,21 @@ public:
         typename nodes_t::iterator child_it = nodes.find(id);
         if (child_it != nodes.end())
             throw VirusAlreadyCreated();
-
-        std::vector<typename nodes_t::iterator> parent_its;
-        for (const typename Virus::id_type &parent_id : parent_ids) {
-            typename nodes_t::iterator parent_it = nodes.find(parent_id);
-            if (parent_it == nodes.end())
-                throw VirusNotFound();
-            parent_its.push_back(parent_it);
-        }
-        VirusNode& child = *nodes.insert({id, std::make_shared<VirusNode>(id)})
-                           .first->second;
-        for (typename nodes_t::iterator parent_it : parent_its) {
-            VirusNode& parent = *parent_it->second;
-            parent.childs.insert(child.ptr);
-            child.parents.insert(parent.ptr);
+        if (!parent_ids.empty()) {
+            std::vector<typename nodes_t::iterator> parent_its;
+            for (const typename Virus::id_type &parent_id : parent_ids) {
+                typename nodes_t::iterator parent_it = nodes.find(parent_id);
+                if (parent_it == nodes.end())
+                    throw VirusNotFound();
+                parent_its.push_back(parent_it);
+            }
+            VirusNode& child = *nodes.insert({id, std::make_shared<VirusNode>(id)})
+                            .first->second;
+            for (typename nodes_t::iterator parent_it : parent_its) {
+                VirusNode& parent = *parent_it->second;
+                parent.childs.insert(child.ptr);
+                child.parents.insert(parent.ptr);
+            }
         }
     }; 
 
