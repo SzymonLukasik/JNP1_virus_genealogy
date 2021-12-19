@@ -217,13 +217,19 @@ public:
             throw TriedToRemoveStemVirus();
         auto virus_it = nodes[id];
         for (auto child : virus_it->childs) {
-            nodes[child->get_id()]->parents.erase(virus_it->ptr);
-            if (nodes[child->get_id()]->parents.size() == 0) {
-                remove(child->get_id());
+            auto node = nodes.find(child->get_id());
+            if (node != nodes.end()) {
+                node->second->parents.erase(virus_it->ptr);
+                if (node->second->parents.size() == 0) {
+                    remove(child->get_id());
+                }
             }
         }
         for (auto parent : virus_it->parents) {
-            nodes[parent->get_id()]->childs.erase(virus_it->ptr);
+            auto node = nodes.find(parent->get_id());
+            if (node != nodes.end()) {
+                node->second->childs.erase(virus_it->ptr);
+            }
         }
         nodes.erase(id);
     }
