@@ -42,9 +42,6 @@ public:
         typename std::set<std::shared_ptr<Virus>>::iterator it;
 
     public:
-        VirusGenealogy(VirusGenealogy& other) = delete;
-
-        VirusGenealogy& operator=(VirusGenealogy& other) = delete;
 
         explicit children_iterator() = default;
 
@@ -95,6 +92,10 @@ public:
     explicit VirusGenealogy(typename Virus::id_type const &stem_id) :
     nodes{{stem_id, std::make_shared<VirusNode>(stem_id)}},
     stem_id(stem_id) {}
+
+    VirusGenealogy(const VirusGenealogy& other) = delete;
+
+    VirusGenealogy& operator=(const VirusGenealogy& other) = delete;
 
     // Zwraca identyfikator wirusa macierzystego.
     typename Virus::id_type get_stem_id() const {return stem_id;}
