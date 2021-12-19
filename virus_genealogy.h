@@ -8,17 +8,17 @@
 
 class VirusNotFound : public std::exception {
 public:
-    virtual const char* what() const noexcept {return "VirusNotFound\n";}
+    virtual const char* what() const noexcept {return "VirusNotFound";}
 };
 
 class VirusAlreadyCreated : public std::exception {
 public:
-    virtual const char* what() const noexcept {return "VirusAlreadyCreated\n";}
+    virtual const char* what() const noexcept {return "VirusAlreadyCreated";}
 };
 
 class TriedToRemoveStemVirus : public std::exception {
 public:
-    virtual const char* what() const noexcept {return "TriedToRemoveStemVirus\n";}
+    virtual const char* what() const noexcept {return "TriedToRemoveStemVirus";}
 };
 
 template<typename Virus>
