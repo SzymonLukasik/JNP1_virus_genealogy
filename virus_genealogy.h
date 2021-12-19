@@ -27,6 +27,8 @@ private:
 
     using nodes_t = std::map<typename Virus::id_type, std::shared_ptr<VirusNode>>;
     nodes_t nodes;
+    using nodes_iterator = typename nodes_t::iterator;
+    using nodes_const_iterator = typename nodes_t::const_iterator;
     typename Virus::id_type stem_id;
 
 public:
@@ -55,7 +57,7 @@ public:
     // o podanym identyfikatorze.
     // Zgłasza wyjątek VirusNotFound, jeśli dany wirus nie istnieje.
     std::vector<typename Virus::id_type> get_parents(Virus::id_type const &id) const {
-        auto it = nodes.find(id);
+        nodes_const_iterator it = nodes.find(id);
         if (it == nodes.end())
             throw (new VirusNotFound);
         std::vector<typename Virus::id_type> res;
@@ -74,7 +76,7 @@ public:
     // identyfikatorze.
     // Zgłasza wyjątek VirusNotFound, jeśli żądany wirus nie istnieje.
     const Virus& operator[](typename Virus::id_type const &id) const {
-        auto it = nodes.find(id);
+        nodes_const_iterator it = nodes.find(id);
         if (it == nodes.end())
             throw (new VirusNotFound);
         return *(it->second->ptr);
@@ -88,10 +90,10 @@ public:
     // Zgłasza wyjątek VirusNotFound, jeśli któryś z wyspecyfikowanych
     // poprzedników nie istnieje.
     void create(typename Virus::id_type const &id, typename Virus::id_type const &parent_id) {
-        typename nodes_t::iterator child_it = nodes.find(id);
+        nodes_iterator child_it = nodes.find(id);
         if (child_it != nodes.end())
             throw (new VirusAlreadyCreated);
-        typename nodes_t::iterator parent_it = nodes.find(parent_id);
+        nodes_iterator parent_it = nodes.find(parent_id);
         if (parent_it == nodes.end())
             throw (new VirusNotFound);
         
@@ -103,20 +105,20 @@ public:
     };
 
     void create(typename Virus::id_type const &id, std::vector<typename Virus::id_type> const &parent_ids) {
-        typename nodes_t::iterator child_it = nodes.find(id);
+        nodes_iterator child_it = nodes.find(id);
         if (child_it != nodes.end())
             throw (new VirusAlreadyCreated);
 
-        std::vector<typename nodes_t::iterator> parent_its;
+        std::vector<nodes_iterator> parent_its;
         for (const typename Virus::id_type &parent_id : parent_ids) {
-            typename nodes_t::iterator parent_it = nodes.find(parent_id);
+            nodes_iterator parent_it = nodes.find(parent_id);
             if (parent_it == nodes.end())
                 throw (new VirusNotFound);
             parent_its.push_back(parent_it);
         }
         VirusNode& child = *nodes.insert({id, std::make_shared<VirusNode>(id)})
                            .first->second;
-        for (typename nodes_t::iterator parent_it : parent_its) {
+        for (nodes_iterator parent_it : parent_its) {
             VirusNode& parent = *parent_it->second;
             parent.childs.insert(child.ptr);
             child.parents.insert(parent.ptr);
@@ -126,7 +128,7 @@ public:
     // Dodaje nową krawędź w grafie genealogii.
     // Zgłasza wyjątek VirusNotFound, jeśli któryś z podanych wirusów nie istnieje.
     void connect(Virus::id_type const &child_id, Virus::id_type const &parent_id) {
-        typename nodes_t::iterator child_it = nodes.find(child_id),
+        nodes_iterator child_it = nodes.find(child_id),
                                    parent_it = nodes.find(parent_id);
         
         if (child_it == nodes.end() || parent_it == nodes.end())
