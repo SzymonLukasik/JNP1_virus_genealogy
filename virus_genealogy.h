@@ -24,10 +24,12 @@ public:
 template<typename Virus>
 class VirusGenealogy {
 private:
+    using viruses_set = std::set<std::shared_ptr<Virus>>;
+
     struct VirusNode {
         std::shared_ptr<Virus> ptr;
-        std::set<std::shared_ptr<Virus>> childs;
-        std::set<std::shared_ptr<Virus>> parents;
+        viruses_set childs;
+        viruses_set parents;
 
         explicit VirusNode(typename Virus::id_type id) : ptr(std::make_shared<Virus>(id)) {}
     };
@@ -39,7 +41,7 @@ private:
 public:
     class children_iterator {
     private:
-        typename std::set<std::shared_ptr<Virus>>::iterator it;
+        typename viruses_set::iterator it;
 
     public:
         using difference_type = std::ptrdiff_t;
@@ -48,7 +50,7 @@ public:
 
         explicit children_iterator() = default;
 
-        explicit children_iterator(typename std::set<std::shared_ptr<Virus>>::iterator it)
+        explicit children_iterator(typename viruses_set::iterator it)
                 : it(it) {}
 
         children_iterator& operator++() {
