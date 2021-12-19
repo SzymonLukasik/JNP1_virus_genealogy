@@ -1,0 +1,25 @@
+konstruktor
+remove
+create X 2
+connect
+exists
+
+get_stem_id
+get_children_begin
+get_children_end
+get_parents
+operator[]
+
+konstruktor
+create x 2
+get_stem_id
+get_parents
+operator[]
+
+remove
+connect
+exists
+get_children_begin
+get_children_end
+
+A ----> B ----> C
