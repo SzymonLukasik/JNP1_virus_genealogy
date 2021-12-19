@@ -1,3 +1,6 @@
+#ifndef VIRUS_GENEALOGY_H
+#define VIRUS_GENEALOGY_H
+
 #include <memory>
 #include <set>
 #include <map>
@@ -190,10 +193,9 @@ public:
                                    parent_it = nodes.find(parent_id);
         
         if (child_it == nodes.end() || parent_it == nodes.end())
-            throw VirusAlreadyCreated();
-        VirusNode& child = *child_it->second, parent = *parent_it->second;
-        parent.childs.insert(child.ptr);
-        child.parents.insert(parent.ptr);
+            throw VirusNotFound();
+        parent_it->second->childs.insert(child_it->second->ptr);
+        child_it->second->parents.insert(parent_it->second->ptr);
     };
 
     // Usuwa wirus o podanym identyfikatorze.
@@ -207,7 +209,8 @@ public:
             throw TriedToRemoveStemVirus();
         auto virus_it = nodes[id];
         for (auto child : virus_it->childs) {
-            if (nodes[child->get_id()]->parents.size() == 1) {
+            nodes[child->get_id()]->parents.erase(virus_it->ptr);
+            if (nodes[child->get_id()]->parents.size() == 0) {
                 remove(child->get_id());
             }
         }
@@ -217,3 +220,5 @@ public:
         nodes.erase(id);
     }
 };
+
+#endif // VIRUS_GENEALOGY_H
