@@ -96,9 +96,9 @@ public:
     nodes{{stem_id, std::make_shared<VirusNode>(stem_id)}},
     stem_id(stem_id) {}
 
-    VirusGenealogy(VirusGenealogy& other) = delete;
+    VirusGenealogy(const VirusGenealogy& other) = delete;
 
-    VirusGenealogy& operator=(VirusGenealogy& other) = delete;
+    VirusGenealogy& operator=(const VirusGenealogy& other) = delete;
 
     // Zwraca identyfikator wirusa macierzystego.
     typename Virus::id_type get_stem_id() const {return stem_id;}
