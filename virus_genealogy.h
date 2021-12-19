@@ -59,7 +59,7 @@ public:
     std::vector<typename Virus::id_type> get_parents(Virus::id_type const &id) const {
         nodes_const_iterator it = nodes.find(id);
         if (it == nodes.end())
-            throw (new VirusNotFound);
+            throw new VirusNotFound;
         std::vector<typename Virus::id_type> res;
         for (auto &it : it->second->parents) {
             res.push_back(it->get_id());
@@ -78,7 +78,7 @@ public:
     const Virus& operator[](typename Virus::id_type const &id) const {
         nodes_const_iterator it = nodes.find(id);
         if (it == nodes.end())
-            throw (new VirusNotFound);
+            throw new VirusNotFound;
         return *(it->second->ptr);
     };
 
@@ -92,10 +92,10 @@ public:
     void create(typename Virus::id_type const &id, typename Virus::id_type const &parent_id) {
         nodes_iterator child_it = nodes.find(id);
         if (child_it != nodes.end())
-            throw (new VirusAlreadyCreated);
+            throw new VirusAlreadyCreated;
         nodes_iterator parent_it = nodes.find(parent_id);
         if (parent_it == nodes.end())
-            throw (new VirusNotFound);
+            throw new VirusNotFound;
         
         VirusNode& child = *nodes.insert({id, std::make_shared<VirusNode>(id)})
                            .first->second;
@@ -107,13 +107,13 @@ public:
     void create(typename Virus::id_type const &id, std::vector<typename Virus::id_type> const &parent_ids) {
         nodes_iterator child_it = nodes.find(id);
         if (child_it != nodes.end())
-            throw (new VirusAlreadyCreated);
+            throw new VirusAlreadyCreated;
 
         std::vector<nodes_iterator> parent_its;
         for (const typename Virus::id_type &parent_id : parent_ids) {
             nodes_iterator parent_it = nodes.find(parent_id);
             if (parent_it == nodes.end())
-                throw (new VirusNotFound);
+                throw new VirusNotFound;
             parent_its.push_back(parent_it);
         }
         VirusNode& child = *nodes.insert({id, std::make_shared<VirusNode>(id)})
@@ -132,7 +132,7 @@ public:
                                    parent_it = nodes.find(parent_id);
         
         if (child_it == nodes.end() || parent_it == nodes.end())
-            throw (new VirusAlreadyCreated);
+            throw new VirusAlreadyCreated;
         VirusNode& child = *child_it->second, parent = *parent_it->second;
         parent.childs.insert(child.ptr);
         child.parents.insert(parent.ptr);
